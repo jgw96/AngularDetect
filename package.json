@@ -1,0 +1,13 @@
+{
+  "title": "AngularDetect",
+  "name": "angulardetect",
+  "version": "0.0.1",
+  "description": "Detects the use of AngularJS on a webpage",
+  "main": "index.js",
+  "author": "Justin Willis",
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec": ">=38.0a1"
+  },
+  "license": "MIT"
+}
