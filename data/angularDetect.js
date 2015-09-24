@@ -5,7 +5,9 @@ var angularFound = document.querySelector('.ng-binding, ' +
   '[ng-repeat], [data-ng-repeat]') ||
   document.querySelector('script[src*="angular.js"], ' +
     'script[src*="angular.min.js"]');
-    
-if(angularFound) {
-  window.alert("angularJS is used on this page");
-}
+
+self.port.on("pageChanged", function () {
+  if(angularFound) {
+    self.port.emit("angularFound");
+  }
+});

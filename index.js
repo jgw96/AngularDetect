@@ -1,9 +1,8 @@
 var buttons = require('sdk/ui/button/action');
 var tabs = require("sdk/tabs");
 var self = require("sdk/self");
-var data = require("sdk/self").data;
 var pageMod = require("sdk/page-mod");
-
+var notifications = require("sdk/notifications");
 
 var button = buttons.ActionButton({
   id: "mozilla-link",
@@ -18,8 +17,24 @@ var button = buttons.ActionButton({
 
 pageMod.PageMod({
   include: "*",
-  contentScriptFile: data.url("angularDetect.js")
+  contentScriptFile: self.data.url("angularDetect.js"),
+
+  onAttach: function (worker) {
+    worker.port.emit("pageChanged");
+
+    worker.port.on("angularFound", function () {
+      notifications.notify({
+        title: "AngularDetect",
+        text: "This page uses AngularJS!",
+        onClick: handleClick
+      });
+    })
+
+  }
+
 })
+
+
 
 function handleClick(state) {
   tabs.open("https://angularjs.org/");
