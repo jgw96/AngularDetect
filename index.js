@@ -6,37 +6,40 @@ var notifications = require("sdk/notifications");
 
 var button = buttons.ActionButton({
   id: "mozilla-link",
-  label: "Visit AngularJS",
+  label: "AngularDetect",
   icon: {
     "16": "./angularSmall.png",
     "32": "./angularSmall.png",
     "64": "./angularSmall.png"
   },
-  onClick: handleClick
+  disabled: true
 });
+
+
 
 pageMod.PageMod({
   include: "*",
   contentScriptFile: self.data.url("angularDetect.js"),
 
   onAttach: function (worker) {
-    worker.port.emit("pageChanged");
+    worker.port.emit("pageChanged");  
 
     worker.port.on("angularFound", function () {
-      notifications.notify({
-        title: "AngularDetect",
-        text: "This page uses AngularJS!",
-        onClick: handleClick
-      });
+      button.disabled = false;
+      button.label = "AngularJS 1.*.* found";
     })
-
+    
+    worker.port.on("angular2Found", function () { 
+      button.disabled = false;
+      button.label = "Angular 2 found";
+    })
+    
+    worker.port.on("noAngular", function() {
+      button.disabled = true;
+      button.label = "AngularJS is not used on this page";
+    })
+    
   }
 
 })
-
-
-
-function handleClick(state) {
-  tabs.open("https://angularjs.org/");
-}
 
